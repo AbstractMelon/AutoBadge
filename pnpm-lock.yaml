@@ -14,6 +14,9 @@ importers:
       '@tensorflow/tfjs-node':
         specifier: 1.7.4
         version: 1.7.4(seedrandom@2.4.3)
+      adm-zip:
+        specifier: ^0.5.16
+        version: 0.5.16
       canvas:
         specifier: ^3.1.2
         version: 3.1.2
@@ -88,6 +91,10 @@ packages:
   adm-zip@0.4.16:
     resolution: {integrity: sha512-TFi4HBKSGfIKsK5YCkKaaFG2m4PEDyViZmEwof3MTIgzimHLto6muaHVpbrljdIvIrFZzEq/p4nafOeLcYegrg==}
     engines: {node: '>=0.3.0'}
+
+  adm-zip@0.5.16:
+    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
+    engines: {node: '>=12.0'}
 
   agent-base@4.3.0:
     resolution: {integrity: sha512-salcGninV0nPrwpGNn4VTXBb1SOuXQBiqbrNXoeizJsHrsL6ERFM2Ne3JUSBWRE6aeNJI2ROP/WEEIDUiDe3cg==}
@@ -843,6 +850,8 @@ snapshots:
       negotiator: 1.0.0
 
   adm-zip@0.4.16: {}
+
+  adm-zip@0.5.16: {}
 
   agent-base@4.3.0:
     dependencies:

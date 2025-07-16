@@ -3,96 +3,306 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AutoBadge - Node.js Version</title>
+    <title>AutoBadge Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        /* Dark Theme Colors */
+        --primary-color: #6366f1; /* Indigo 500 */
+        --primary-hover: #4f46e5; /* Indigo 600 */
+        --secondary-color: #374151; /* Gray 700 */
+        --text-dark: #f9fafb; /* Gray 50 */
+        --text-light: #d1d5db; /* Gray 300 */
+        --bg-dark: #111827; /* Gray 900 */
+        --bg-medium-dark: #1f2937; /* Gray 800 */
+        --border-color: #374151; /* Gray 700 */
+        --shadow-light: 0 1px 3px 0 rgba(0, 0, 0, 0.3),
+          0 1px 2px 0 rgba(0, 0, 0, 0.18);
+        --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.25),
+          0 2px 4px -1px rgba(0, 0, 0, 0.15);
+        /* Status Colors */
+        --status-processing-bg: #374151; /* Gray 700 */
+        --status-processing-text: #d1d5db; /* Gray 300 */
+        --status-success-bg: #10b981; /* Green 500 */
+        --status-success-text: #ecfdf5; /* Green 50 */
+        --status-error-bg: #ef4444; /* Red 500 */
+        --status-error-text: #fef2f2; /* Red 50 */
+      }
+
       body {
-        font-family: sans-serif;
-        background-color: #f0f2f5;
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-dark);
         display: flex;
         justify-content: center;
-        padding-top: 4rem;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 2rem 1rem;
+        box-sizing: border-box;
       }
+
       .container {
-        max-width: 500px;
+        max-width: 550px;
         width: 100%;
-        background: #fff;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: var(--bg-medium-dark);
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-medium);
+        border: 1px solid var(--border-color);
+        transition: transform 0.3s ease;
       }
+
       h1 {
-        color: #1c1e21;
+        color: var(--primary-color);
         text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        font-size: 2.25rem;
       }
+
+      h1 .autobadge-text {
+        color: var(--text-dark);
+      }
+
       .form-group {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
       }
+
       label {
         display: block;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.6rem;
+        color: var(--text-light);
+        font-size: 0.95rem;
       }
-      input {
+
+      input[type="text"],
+      input[type="file"] {
         width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+        padding: 0.9rem 1.1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
         box-sizing: border-box;
+        font-size: 1rem;
+        color: var(--text-dark);
+        background-color: var(--secondary-color);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
       }
-      .btn {
-        display: block;
-        width: 100%;
-        padding: 0.8rem;
-        background-color: #007bff;
+
+      input[type="text"]:focus,
+      input[type="file"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* primary color with transparency */
+      }
+
+      /* Custom styling for file input to make it look nicer */
+      input[type="file"] {
+        padding: 0.75rem 1rem;
+      }
+
+      input[type="file"]::-webkit-file-upload-button {
+        visibility: hidden;
+      }
+      input[type="file"]::before {
+        content: "Choose File";
+        display: inline-block;
+        background: var(--primary-color);
         color: white;
         border: none;
         border-radius: 6px;
-        font-size: 1rem;
+        padding: 0.75rem 1.2rem;
+        outline: none;
+        white-space: nowrap;
+        -webkit-user-select: none;
         cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-right: 1rem;
+        transition: background-color 0.3s ease;
       }
+      input[type="file"]:hover::before {
+        background-color: var(--primary-hover);
+      }
+      input[type="file"]:active::before {
+        background-color: var(--primary-hover);
+      }
+      input[type="file"]::file-selector-button {
+        /* Firefox styling */
+        display: none;
+      }
+
+      .btn {
+        display: block;
+        width: 100%; /* Default for form submit button */
+        padding: 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .btn:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-light);
+      }
+
       .btn:disabled {
-        background-color: #a0c9f7;
+        background-color: var(--secondary-color);
+        color: var(--text-light);
+        cursor: not-allowed;
+        transform: translateY(0);
+        box-shadow: none;
       }
+
+      .btn.btn-secondary {
+        background-color: var(
+          --border-color
+        ); /* A darker gray for secondary action */
+        color: var(--text-dark);
+      }
+
+      .btn.btn-secondary:hover {
+        background-color: #4b5563; /* slightly darker gray on hover */
+        color: var(--text-dark);
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .btn-group .btn {
+        flex: 1;
+      }
+
       #status {
         text-align: center;
-        margin-top: 1rem;
-        color: #606770;
-        background: #f0f2f5;
-        padding: 0.5rem;
-        border-radius: 6px;
-        display: none;
+        margin-top: 1.5rem;
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-light);
+        background-color: var(--status-processing-bg);
+        display: none; /* Managed by JS */
+        opacity: 0; /* For fade in/out */
+        transition: opacity 0.3s ease;
       }
+
       #result-area {
         text-align: center;
-        margin-top: 2rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px dashed var(--border-color);
+        display: none; /* Hidden by default, shown by JS */
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
       }
-      #result-area img {
+
+      #result-area h2 {
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      #resultImage {
         max-width: 100%;
-        border-radius: 8px;
-        border: 1px solid #ddd;
+        height: auto;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-light);
+        display: block;
+        opacity: 0;
+        transition: opacity 0.5s ease;
       }
+
+      .result-buttons {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .result-buttons .btn {
+        flex: 1;
+        /*max-width: 220px;*/
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
+
       #downloadLink {
-        display: none;
-        margin-top: 1rem;
+        text-decoration: none;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 1.5rem;
+          margin: 1rem;
+        }
+        h1 {
+          font-size: 1.8rem;
+          margin-bottom: 1.5rem;
+        }
+        .btn {
+          font-size: 1rem;
+          padding: 0.8rem;
+        }
+        #result-area {
+          margin-top: 1.5rem;
+          padding-top: 1.5rem;
+        }
+        .result-buttons {
+          flex-direction: column; /* Stack buttons vertically on small screens */
+          gap: 0.8rem;
+        }
+        .result-buttons .btn {
+          max-width: none; /* Let them take full width when stacked */
+        }
+        .btn-group {
+          flex-direction: column;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>AutoBadge</h1>
-      <form id="uploadForm">
+      <h1><span class="autobadge-text">Auto</span>Badge Generator</h1>
+
+      <div class="btn-group">
+        <button id="showSingleUploadBtn" class="btn">Single Badge</button>
+        <button id="showMassUploadBtn" class="btn btn-secondary">
+          Mass Upload (Zip)
+        </button>
+      </div>
+
+      <form id="singleUploadForm" style="display: block">
         <div class="form-group">
-          <label for="imageFile">Upload Image</label>
+          <label for="imageFile">Upload Your Photo</label>
           <input
             type="file"
             id="imageFile"
             name="imageFile"
-            accept="image/*"
+            accept="image/png, image/jpeg, image/webp"
             required
           />
         </div>
         <div class="form-group">
-          <label for="fullName">Enter Full Name</label>
+          <label for="fullName">Your Full Name</label>
           <input
             type="text"
             id="fullName"
@@ -105,34 +315,168 @@
           Generate Badge
         </button>
       </form>
+
+      <form id="massUploadForm" style="display: none">
+        <div class="form-group">
+          <label for="zipFile">Upload a Zip of Photos</label>
+          <input
+            type="file"
+            id="zipFile"
+            name="zipFile"
+            accept=".zip"
+            required
+          />
+        </div>
+        <button type="submit" id="generateZipBtn" class="btn">
+          Generate Badges from Zip
+        </button>
+      </form>
+
       <div id="status"></div>
+
       <div id="result-area">
-        <img id="resultImage" src="" alt="Processed Badge" />
-        <a id="downloadLink" href="#" class="btn" download>Download Badge</a>
+        <h2 id="resultTitle">Your Generated Badge</h2>
+        <img id="resultImage" src="" alt="Processed Badge Preview" />
+        <div class="result-buttons">
+          <a id="downloadLink" href="#" class="btn" download>Download Badge</a>
+          <a id="downloadZipLink" href="#" class="btn" download
+            >Download All Badges (Zip)</a
+          >
+          <button id="makeAnotherBtn" class="btn btn-secondary">
+            Make Another Badge
+          </button>
+        </div>
       </div>
     </div>
 
     <script>
-      const form = document.getElementById("uploadForm");
+      const singleUploadForm = document.getElementById("singleUploadForm");
+      const massUploadForm = document.getElementById("massUploadForm");
+      const showSingleUploadBtn = document.getElementById(
+        "showSingleUploadBtn"
+      );
+      const showMassUploadBtn = document.getElementById("showMassUploadBtn");
       const generateBtn = document.getElementById("generateBtn");
+      const generateZipBtn = document.getElementById("generateZipBtn");
       const statusDiv = document.getElementById("status");
       const resultImage = document.getElementById("resultImage");
       const downloadLink = document.getElementById("downloadLink");
+      const downloadZipLink = document.getElementById("downloadZipLink");
+      const fileInput = document.getElementById("imageFile");
+      const zipFileInput = document.getElementById("zipFile");
+      const fullNameInput = document.getElementById("fullName");
+      const resultArea = document.getElementById("result-area");
+      const makeAnotherBtn = document.getElementById("makeAnotherBtn");
+      const resultTitle = document.getElementById("resultTitle");
 
-      form.addEventListener("submit", async (e) => {
+      let currentMode = "single"; // 'single' or 'mass'
+
+      function updateFileInputText(inputElement) {
+        const fileName = inputElement.files[0]
+          ? inputElement.files[0].name
+          : "No file chosen";
+        inputElement.setAttribute("data-file-name", fileName);
+      }
+
+      fileInput.addEventListener("change", () => {
+        updateFileInputText(fileInput);
+        const file = fileInput.files[0];
+        if (file) {
+          const fileName = file.name;
+          const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, ""); // Remove extension
+          const decodedName = decodeURIComponent(nameWithoutExtension)
+            .replace(/[_\-]+/g, " ")
+            .trim();
+          if (!fullNameInput.value) {
+            fullNameInput.value = decodedName;
+          }
+        }
+      });
+
+      zipFileInput.addEventListener("change", () => {
+        updateFileInputText(zipFileInput);
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        updateFileInputText(fileInput);
+        updateFileInputText(zipFileInput);
+        showForm("single"); // Initialize with single upload form
+      });
+
+      function showForm(mode) {
+        currentMode = mode;
+        statusDiv.style.display = "none";
+        statusDiv.style.opacity = 0;
+        resultArea.style.display = "none";
+        resultImage.src = "";
+        resultImage.style.opacity = 0;
+        downloadLink.style.display = "none";
+        downloadZipLink.style.display = "none";
+        makeAnotherBtn.style.display = "none";
+
+        if (mode === "single") {
+          singleUploadForm.style.display = "block";
+          massUploadForm.style.display = "none";
+          showSingleUploadBtn.classList.add("btn");
+          showSingleUploadBtn.classList.remove("btn-secondary");
+          showMassUploadBtn.classList.add("btn-secondary");
+          showMassUploadBtn.classList.remove("btn");
+          singleUploadForm.reset();
+          updateFileInputText(fileInput);
+          resultTitle.textContent = "Your Generated Badge";
+        } else {
+          singleUploadForm.style.display = "none";
+          massUploadForm.style.display = "block";
+          showSingleUploadBtn.classList.add("btn-secondary");
+          showSingleUploadBtn.classList.remove("btn");
+          showMassUploadBtn.classList.add("btn");
+          showMassUploadBtn.classList.remove("btn-secondary");
+          massUploadForm.reset();
+          updateFileInputText(zipFileInput);
+          resultTitle.textContent = "Your Generated Badges";
+        }
+      }
+
+      function showResultArea(isZipDownload = false) {
+        singleUploadForm.style.display = "none";
+        massUploadForm.style.display = "none";
+        resultArea.style.display = "flex";
+        statusDiv.style.display = "block";
+        downloadLink.style.display = isZipDownload ? "none" : "block"; // Hide for zip download result
+        downloadZipLink.style.display = isZipDownload ? "block" : "none"; // Show for zip download result
+        makeAnotherBtn.style.display = "block";
+      }
+
+      showSingleUploadBtn.addEventListener("click", () => showForm("single"));
+      showMassUploadBtn.addEventListener("click", () => showForm("mass"));
+
+      singleUploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(form);
-        if (!formData.get("imageFile")?.size || !formData.get("fullName")) {
-          alert("Please provide both an image and a name.");
+        const formData = new FormData(singleUploadForm);
+        const imageFile = formData.get("imageFile");
+
+        if (!imageFile || imageFile.size === 0 || !formData.get("fullName")) {
+          statusDiv.style.display = "block";
+          statusDiv.style.opacity = 1;
+          statusDiv.textContent =
+            "Please provide both an image and your full name.";
+          statusDiv.style.backgroundColor = "var(--status-error-bg)";
+          statusDiv.style.color = "var(--status-error-text)";
           return;
         }
 
         statusDiv.style.display = "block";
-        statusDiv.textContent = "Uploading and processing... Please wait.";
+        statusDiv.style.opacity = 1;
+        statusDiv.textContent =
+          "Uploading and processing... This may take a moment.";
+        statusDiv.style.backgroundColor = "var(--status-processing-bg)";
+        statusDiv.style.color = "var(--status-processing-text)";
+
         generateBtn.disabled = true;
-        resultImage.src = "";
+        resultImage.style.opacity = 0;
         downloadLink.style.display = "none";
+        makeAnotherBtn.style.display = "none";
 
         try {
           const response = await fetch("/process-image", {
@@ -141,26 +485,120 @@
           });
 
           if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || "Server error occurred.");
+            const errorText = await response.text();
+            let errorMessage = "Server error occurred.";
+            try {
+              const errorJson = JSON.parse(errorText);
+              errorMessage = errorJson.message || errorMessage;
+            } catch (jsonError) {
+              errorMessage = errorText || errorMessage;
+            }
+            throw new Error(errorMessage);
           }
 
           const imageBlob = await response.blob();
           const imageUrl = URL.createObjectURL(imageBlob);
 
           resultImage.src = imageUrl;
+          setTimeout(() => {
+            resultImage.style.opacity = 1;
+          }, 50);
+
           downloadLink.href = imageUrl;
           downloadLink.download = `${formData
             .get("fullName")
             .replace(/\s+/g, "_")}_badge.png`;
-          downloadLink.style.display = "block";
-          statusDiv.textContent = "Done! Your badge is ready.";
+
+          statusDiv.textContent = "Success! Your badge is ready.";
+          statusDiv.style.backgroundColor = "var(--status-success-bg)";
+          statusDiv.style.color = "var(--status-success-text)";
+
+          showResultArea(false); // Not a zip download
         } catch (error) {
           statusDiv.textContent = `Error: ${error.message}`;
+          statusDiv.style.backgroundColor = "var(--status-error-bg)";
+          statusDiv.style.color = "var(--status-error-text)";
           console.error(error);
+          showForm(currentMode); // Stay on current form mode
         } finally {
           generateBtn.disabled = false;
         }
+      });
+
+      massUploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(massUploadForm);
+        const zipFile = formData.get("zipFile");
+
+        if (!zipFile || zipFile.size === 0) {
+          statusDiv.style.display = "block";
+          statusDiv.style.opacity = 1;
+          statusDiv.textContent = "Please select a zip file to upload.";
+          statusDiv.style.backgroundColor = "var(--status-error-bg)";
+          statusDiv.style.color = "var(--status-error-text)";
+          return;
+        }
+
+        statusDiv.style.display = "block";
+        statusDiv.style.opacity = 1;
+        statusDiv.textContent =
+          "Uploading and processing zip file... This may take a while for large zips.";
+        statusDiv.style.backgroundColor = "var(--status-processing-bg)";
+        statusDiv.style.color = "var(--status-processing-text)";
+
+        generateZipBtn.disabled = true;
+        resultImage.style.opacity = 0;
+        downloadZipLink.style.display = "none";
+        makeAnotherBtn.style.display = "none";
+
+        try {
+          const response = await fetch("/process-zip", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = "Server error occurred during zip processing.";
+            try {
+              const errorJson = JSON.parse(errorText);
+              errorMessage = errorJson.message || errorMessage;
+            } catch (jsonError) {
+              errorMessage = errorText || errorMessage;
+            }
+            throw new Error(errorMessage);
+          }
+
+          const zipBlob = await response.blob();
+          const zipUrl = URL.createObjectURL(zipBlob);
+
+          // For zip, we don't display a single image, so we can hide resultImage
+          resultImage.style.display = "none";
+          resultTitle.textContent = "All Badges Processed!";
+
+          downloadZipLink.href = zipUrl;
+          downloadZipLink.download = `autobadges_${Date.now()}.zip`;
+
+          statusDiv.textContent =
+            "Success! All badges processed and ready for download.";
+          statusDiv.style.backgroundColor = "var(--status-success-bg)";
+          statusDiv.style.color = "var(--status-success-text)";
+
+          showResultArea(true); // Is a zip download result
+        } catch (error) {
+          statusDiv.textContent = `Error: ${error.message}`;
+          statusDiv.style.backgroundColor = "var(--status-error-bg)";
+          statusDiv.style.color = "var(--status-error-text)";
+          console.error(error);
+          showForm(currentMode); // Stay on current form mode
+        } finally {
+          generateZipBtn.disabled = false;
+        }
+      });
+
+      makeAnotherBtn.addEventListener("click", () => {
+        showForm(currentMode); // Go back to the currently active form mode
       });
     </script>
   </body>
