@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AutoBadge - Node.js Version</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        padding-top: 4rem;
+      }
+      .container {
+        max-width: 500px;
+        width: 100%;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #1c1e21;
+        text-align: center;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+      }
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 0.8rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .btn:disabled {
+        background-color: #a0c9f7;
+      }
+      #status {
+        text-align: center;
+        margin-top: 1rem;
+        color: #606770;
+        background: #f0f2f5;
+        padding: 0.5rem;
+        border-radius: 6px;
+        display: none;
+      }
+      #result-area {
+        text-align: center;
+        margin-top: 2rem;
+      }
+      #result-area img {
+        max-width: 100%;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+      #downloadLink {
+        display: none;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>AutoBadge</h1>
+      <form id="uploadForm">
+        <div class="form-group">
+          <label for="imageFile">Upload Image</label>
+          <input
+            type="file"
+            id="imageFile"
+            name="imageFile"
+            accept="image/*"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="fullName">Enter Full Name</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="e.g., Jane Doe"
+            required
+          />
+        </div>
+        <button type="submit" id="generateBtn" class="btn">
+          Generate Badge
+        </button>
+      </form>
+      <div id="status"></div>
+      <div id="result-area">
+        <img id="resultImage" src="" alt="Processed Badge" />
+        <a id="downloadLink" href="#" class="btn" download>Download Badge</a>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("uploadForm");
+      const generateBtn = document.getElementById("generateBtn");
+      const statusDiv = document.getElementById("status");
+      const resultImage = document.getElementById("resultImage");
+      const downloadLink = document.getElementById("downloadLink");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        if (!formData.get("imageFile")?.size || !formData.get("fullName")) {
+          alert("Please provide both an image and a name.");
+          return;
+        }
+
+        statusDiv.style.display = "block";
+        statusDiv.textContent = "Uploading and processing... Please wait.";
+        generateBtn.disabled = true;
+        resultImage.src = "";
+        downloadLink.style.display = "none";
+
+        try {
+          const response = await fetch("/process-image", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || "Server error occurred.");
+          }
+
+          const imageBlob = await response.blob();
+          const imageUrl = URL.createObjectURL(imageBlob);
+
+          resultImage.src = imageUrl;
+          downloadLink.href = imageUrl;
+          downloadLink.download = `${formData
+            .get("fullName")
+            .replace(/\s+/g, "_")}_badge.png`;
+          downloadLink.style.display = "block";
+          statusDiv.textContent = "Done! Your badge is ready.";
+        } catch (error) {
+          statusDiv.textContent = `Error: ${error.message}`;
+          console.error(error);
+        } finally {
+          generateBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
