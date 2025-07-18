@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
-const AdmZip = require("adm-zip"); // New: For unzipping files
+const AdmZip = require("adm-zip");
 
 // face-api.js requirements
 const canvas = require("canvas");
