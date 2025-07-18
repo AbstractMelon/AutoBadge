@@ -71,7 +71,7 @@ async function processSingleImage(imagePath, fullName) {
       const faceCenterX = x + width / 2;
       const faceCenterY = y + height / 2;
       const minFaceDimension = Math.min(width, height);
-      const zoomFactor = 1.6;
+      const zoomFactor = 1.8;
       const cropWidth = minFaceDimension * zoomFactor;
       const cropHeight =
         minFaceDimension * (zoomFactor * (targetHeight / targetWidth));

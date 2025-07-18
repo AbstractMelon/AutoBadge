@@ -139,7 +139,6 @@
 
       .btn {
         display: block;
-        width: 100%; /* Default for form submit button */
         padding: 1rem;
         background-color: var(--primary-color);
         color: white;
@@ -181,7 +180,7 @@
       .btn-group {
         display: flex;
         gap: 1rem;
-        margin-top: 1.5rem;
+        margin: 1.5rem 0;
       }
 
       .btn-group .btn {
@@ -240,13 +239,15 @@
 
       .result-buttons .btn {
         flex: 1;
-        /*max-width: 220px;*/
-        padding: 0.8rem 1.5rem;
         font-size: 1rem;
       }
 
       #downloadLink {
         text-decoration: none;
+      }
+
+      .generate-btn {
+        width: 100%;
       }
 
       @media (max-width: 600px) {
@@ -311,7 +312,7 @@
             required
           />
         </div>
-        <button type="submit" id="generateBtn" class="btn">
+        <button type="submit" id="generateBtn" class="btn generate-btn">
           Generate Badge
         </button>
       </form>
@@ -417,10 +418,8 @@
         if (mode === "single") {
           singleUploadForm.style.display = "block";
           massUploadForm.style.display = "none";
-          showSingleUploadBtn.classList.add("btn");
           showSingleUploadBtn.classList.remove("btn-secondary");
           showMassUploadBtn.classList.add("btn-secondary");
-          showMassUploadBtn.classList.remove("btn");
           singleUploadForm.reset();
           updateFileInputText(fileInput);
           resultTitle.textContent = "Your Generated Badge";
@@ -428,8 +427,6 @@
           singleUploadForm.style.display = "none";
           massUploadForm.style.display = "block";
           showSingleUploadBtn.classList.add("btn-secondary");
-          showSingleUploadBtn.classList.remove("btn");
-          showMassUploadBtn.classList.add("btn");
           showMassUploadBtn.classList.remove("btn-secondary");
           massUploadForm.reset();
           updateFileInputText(zipFileInput);
@@ -507,7 +504,7 @@
           downloadLink.href = imageUrl;
           downloadLink.download = `${formData
             .get("fullName")
-            .replace(/\s+/g, "_")}_badge.png`;
+            .replace(/\s+/g, "_")}.png`;
 
           statusDiv.textContent = "Success! Your badge is ready.";
           statusDiv.style.backgroundColor = "var(--status-success-bg)";
