@@ -246,10 +246,7 @@ app.post("/process-zip", upload.single("zipFile"), async (req, res) => {
           imagePath,
           derivedFullName
         );
-        const outputFileName = `${derivedFullName.replace(
-          /\s+/g,
-          "_"
-        )}_badge.png`;
+        const outputFileName = `${derivedFullName.replace(/\s+/g, "_")}.png`;
         const outputPath = path.join(outputDir, outputFileName);
         fs.writeFileSync(outputPath, processedBuffer);
         console.log(`Processed and saved: ${outputFileName}`);
