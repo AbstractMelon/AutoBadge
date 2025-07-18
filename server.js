@@ -10,7 +10,7 @@ const faceapi = require("face-api.js");
 require("@tensorflow/tfjs-node");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3007;
 
 // --- Face-API Setup ---
 // Monkey patch the environment to use Node.js canvas
